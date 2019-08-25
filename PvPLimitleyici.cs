@@ -17,7 +17,7 @@ namespace DaePvPLimitleyici
         {
             if (Configuration.Instance.YetkiliYokkenLimitle)
             {
-                _yetkiliYok = !Provider.clients.All(s => UnturnedPlayer.FromSteamPlayer(s).HasPermission($"dae.pvplimitleyici.{Configuration.Instance.Yetkili}"));
+                _yetkiliYok = !Provider.clients.Any(s => UnturnedPlayer.FromSteamPlayer(s).HasPermission($"dae.pvplimitleyici.{Configuration.Instance.Yetkili}"));
 
                 U.Events.OnPlayerConnected += OyuncuBağlandığında;
                 U.Events.OnPlayerDisconnected += OyuncuAyrıldığında;
