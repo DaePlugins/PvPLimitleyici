@@ -4,8 +4,6 @@ using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using Steamworks;
-using UnityEngine;
 
 namespace DaePvPLimitleyici
 {
@@ -23,7 +21,7 @@ namespace DaePvPLimitleyici
                 U.Events.OnPlayerDisconnected += OyuncuAyrıldığında;
             }
 
-            DamageTool.playerDamaged += HasarAlındığında;
+            DamageTool.damagePlayerRequested += HasarAlındığında;
         }
 
         protected override void Unload()
@@ -33,8 +31,8 @@ namespace DaePvPLimitleyici
                 U.Events.OnPlayerConnected -= OyuncuBağlandığında;
                 U.Events.OnPlayerDisconnected -= OyuncuAyrıldığında;
             }
-
-            DamageTool.playerDamaged -= HasarAlındığında;
+            
+            DamageTool.damagePlayerRequested -= HasarAlındığında;
         }
 
         private void OyuncuBağlandığında(UnturnedPlayer oyuncu)
@@ -54,9 +52,9 @@ namespace DaePvPLimitleyici
             }
         }
 
-        private void HasarAlındığında(Player hasarıAlan, ref EDeathCause sebep, ref ELimb uzuv, ref CSteamID hasarıVeren, ref Vector3 yön, ref float hasar, ref float tekrar, ref bool hasarVerebilir)
+        private void HasarAlındığında(ref DamagePlayerParameters parametreler, ref bool hasarVerebilir)
         {
-            if (Configuration.Instance.BelirliKişilerHasarVerebilsin && !UnturnedPlayer.FromCSteamID(hasarıVeren).HasPermission($"dae.pvplimitleyici.{Configuration.Instance.HasarVermeYetkisi}")
+            if (Configuration.Instance.BelirliKişilerHasarVerebilsin && !UnturnedPlayer.FromCSteamID(parametreler.killer).HasPermission($"dae.pvplimitleyici.{Configuration.Instance.HasarVermeYetkisi}")
                 || Configuration.Instance.YetkiliYokkenLimitle && _yetkiliYok
                 || Configuration.Instance.OyuncuSayısınaGöreLimitle && Configuration.Instance.MinimumOyuncuSayısı > Provider.clients.Count)
             {
